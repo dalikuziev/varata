@@ -16,22 +16,23 @@ dp = Dispatcher()
 dp.include_routers(start, help, button, tugma)
 
 def process_update(data):
-    """Xabarni orqa fonda qayta ishlash"""
-    async def run():
-        async with AiohttpSession(proxy=PROXY) as session:
-            bot = Bot(token=TOKEN, session=session)
-            update = types.Update(**data)
-            await dp.feed_update(bot, update)
-    asyncio.run(run())
+    try:
+        async def run():
+            async with AiohttpSession(proxy=PROXY) as session:
+                bot = Bot(token=TOKEN, session=session)
+                update = types.Update(**data)
+                await dp.feed_update(bot, update)
+        asyncio.run(run())
+    except Exception as e:
+        print(f"Update error: {e}")
 
 @csrf_exempt
 def telegram_webhook(request):
     if request.method == 'POST':
         try:
-            data = json.loads(request.body)
-            # Telegram kutib qolmasligi uchun fon rejimida ishga tushiramiz:
+            data = json.loads(request.body.decode('utf-8'))
             threading.Thread(target=process_update, args=(data,)).start()
-            return HttpResponse("OK")  # Telegramga 0.01 soniyada javob qaytadi
-        except Exception:
-            return HttpResponse("OK")
-    return HttpResponse(status=405)
+        except Exception as e:
+            print(f"Request error: {e}")
+        return HttpResponse("OK")  # Har doim 200 qaytaradi, Telegram 502 olmaydi
+    return HttpResponse("Method not allowed", status=405)
