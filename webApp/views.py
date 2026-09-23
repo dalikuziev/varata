@@ -21,7 +21,6 @@ async def start(msg: types.Message):
     await msg.answer("Labbay xo'jayin\nnima yordam beray?")
     await msg.answer("yordam kerak bo'lsa: /help")
 
-dp.include_router(start)
 dp.include_router(help)
 dp.include_router(button)
 dp.include_router(tugma)
