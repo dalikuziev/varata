@@ -1,15 +1,13 @@
-import asyncio
 import json
-from django.http import HttpResponseForbidden, JsonResponse
+import asyncio
+from django.http import JsonResponse, HttpResponseForbidden
 from django.views.decorators.csrf import csrf_exempt
 from aiogram import Bot, Dispatcher, types
 from aiogram.client.session.aiohttp import AiohttpSession
 
 TOKEN = "8863118900:AAH8NlAS7IqMf5Q4GSrDz2bUKAxdJJRP_Ak"
+PROXY = "http://proxy.server:3128"
 
-# PythonAnywhere Free tarifi uchun majburiy Proxy sozlamasi:
-session = AiohttpSession(proxy="http://proxy.server:3128")
-bot = Bot(token=TOKEN, session=session)
 dp = Dispatcher()
 
 # --- HANDLERLAR ---
@@ -25,14 +23,18 @@ def telegram_webhook(request):
             data = json.loads(request.body.decode('utf-8'))
             update = types.Update(**data)
 
-            # Asinxron ishni to'g'ri yakunlash:
-            async def process():
-                await dp.feed_update(bot, update)
-                await session.close()  # Sessiyani tozalash qotib qolishning oldini oladi
+            async def handle_update():
+                # Har bir so'rov uchun toza sessiya va bot nusxasi:
+                session = AiohttpSession(proxy=PROXY)
+                bot = Bot(token=TOKEN, session=session)
+                try:
+                    await dp.feed_update(bot, update)
+                finally:
+                    await session.close()
 
             loop = asyncio.new_event_loop()
             asyncio.set_event_loop(loop)
-            loop.run_until_complete(process())
+            loop.run_until_complete(handle_update())
             loop.close()
 
             return JsonResponse({'status': 'ok'})
