@@ -6,7 +6,7 @@ from aiogram import Bot, Dispatcher, types
 from aiogram.client.session.aiohttp import AiohttpSession
 
 PROXY = "http://proxy.server:3128"
-
+TOKEN = "8863118900:AAH8NlAS7IqMf5Q4GSrDz2bUKAxdJJRP_Ak"
 import asyncio
 from aiogram import Dispatcher, Bot
 from handlers.users.start import rt as start
@@ -15,7 +15,7 @@ from handlers.users.button import rt as button
 from handlers.users.tugma import rt as tugma
 dp = Dispatcher()
 async def main():
-    bot = Bot("8863118900:AAH8NlAS7IqMf5Q4GSrDz2bUKAxdJJRP_Ak")
+    bot = Bot(TOKEN)
     dp.include_router(start)
     dp.include_router(help)
     # dp.include_router(aniqlaGroup)
