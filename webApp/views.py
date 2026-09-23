@@ -15,12 +15,14 @@ from .handlers.users.help import rt as help
 from .handlers.users.button import rt as button
 from .handlers.users.tugma import rt as tugma
 
+dp.include_router(start)
+dp.include_router(help)
+dp.include_router(button)
+dp.include_router(tugma)
+
+
 @csrf_exempt
 def telegram_webhook(request):
-    dp.include_router(start)
-    dp.include_router(help)
-    dp.include_router(button)
-    dp.include_router(tugma)
 
     if request.method == 'POST':
         try:
