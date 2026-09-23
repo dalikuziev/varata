@@ -14,6 +14,12 @@ from .handlers.users.start import rt as start
 from .handlers.users.help import rt as help
 from .handlers.users.button import rt as button
 from .handlers.users.tugma import rt as tugma
+from aiogram import Router, filters, types
+rt = Router()
+@rt.message(filters.Command("start"))
+async def start(msg: types.Message):
+    await msg.answer("Labbay xo'jayin\nnima yordam beray?")
+    await msg.answer("yordam kerak bo'lsa: /help")
 
 dp.include_router(start)
 dp.include_router(help)
