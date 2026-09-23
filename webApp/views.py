@@ -8,13 +8,32 @@ from aiogram.client.session.aiohttp import AiohttpSession
 TOKEN = "8863118900:AAH8NlAS7IqMf5Q4GSrDz2bUKAxdJJRP_Ak"
 PROXY = "http://proxy.server:3128"
 
+import asyncio
+from aiogram import Dispatcher, Bot
+from config.settings import BOT_TOKEN
+from handlers.users.start import rt as start
+from handlers.users.help import rt as help
+from handlers.users.button import rt as button
+from handlers.users.tugma import rt as tugma
 dp = Dispatcher()
+async def main():
+    bot = Bot(BOT_TOKEN)
+    dp.include_router(start)
+    dp.include_router(help)
+    # dp.include_router(aniqlaGroup)
+    dp.include_router(tugma)
+    dp.include_router(button)
+    await dp.start_polling(bot)
+if __name__ == "__main__":
+    print("Starting bot...")
+    asyncio.run(main())
 
-# --- HANDLERLAR ---
-@dp.message()
-async def echo_handler(message: types.Message):
-    await message.answer(f"Qabul qilindi: {message.text}")
-# ------------------
+
+
+
+
+
+
 
 @csrf_exempt
 def telegram_webhook(request):
