@@ -9,13 +9,13 @@ TOKEN = "8863118900:AAH8NlAS7IqMf5Q4GSrDz2bUKAxdJJRP_Ak"
 PROXY = "http://proxy.server:3128"
 dp = Dispatcher()
 
-# import asyncio
-# from aiogram import Dispatcher, Bot
-# from handlers.users.start import rt as start
-# from handlers.users.help import rt as help
-# from handlers.users.button import rt as button
-# from handlers.users.tugma import rt as tugma
-# from handlers.groups.aniqlaGroup import rt as aniqlaGroup
+import asyncio
+from aiogram import Dispatcher, Bot
+from handlers.users.start import rt as start
+from handlers.users.help import rt as help
+from handlers.users.button import rt as button
+from handlers.users.tugma import rt as tugma
+from handlers.groups.aniqlaGroup import rt as aniqlaGroup
 # dp = Dispatcher()
 # async def main():
 #     bot = Bot(TOKEN)
@@ -31,14 +31,19 @@ dp = Dispatcher()
 
 
 
-# --- HANDLERLAR ---
-@dp.message()
-async def echo_handler(message: types.Message):
-    await message.answer(f"Qabul qilindi: {message.text}")
-# ------------------
+# # --- HANDLERLAR ---
+# @dp.message()
+# async def echo_handler(message: types.Message):
+#     await message.answer(f"{message.text}")
+# # ------------------
 
 @csrf_exempt
 def telegram_webhook(request):
+    dp.include_router(start)
+    dp.include_router(help)
+    dp.include_router(button)
+    dp.include_router(tugma)
+
     if request.method == 'POST':
         try:
             data = json.loads(request.body.decode('utf-8'))
